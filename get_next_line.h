@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skong <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/12 17:40:23 by skong             #+#    #+#             */
-/*   Updated: 2023/10/13 18:26:33 by skong            ###   ########.fr       */
+/*   Created: 2023/10/13 17:30:11 by skong             #+#    #+#             */
+/*   Updated: 2023/10/13 17:44:43 by skong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "get_next_line.h"
 
-char	*get_next_line(int fd)
-{
-	static char	*remainder;
-	char		buffer[BUFFER_SIZE + 1];
-	int		bytes_read;
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-	
+#include <stdlib.h>
+#include <unitstd.h>
 
+char	*get_next_line(int fd);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strchr(const char *s, int c);
 
-}
+#endif
