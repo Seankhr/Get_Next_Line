@@ -6,7 +6,7 @@
 /*   By: skong <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/13 17:03:53 by skong             #+#    #+#             */
-/*   Updated: 2023/11/28 21:01:04 by skong            ###   ########.fr       */
+/*   Updated: 2023/11/29 10:44:26 by skong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -23,7 +23,7 @@ unsigned long	ft_strlen(const char *c)
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	len;
 	char	*strjoin;
@@ -52,20 +52,18 @@ char	*ft_strjoin(char const *s1, char const *s2);
 	return (result);
 }
 
-char	*ft_strchr(const char *s, int c);
-
-	char	*last;
-
-	last = NULL;
-	while (1)
+char	*ft_strchr(const char *s, int c)
+{
+	while(*s != '\0')
 	{
 		if (*s == (char)c)
-			last = (char *)s;
-		if (*s == '\0')
-			break ;
+			return ((char *)s);
 		s++;
 	}
-	return (last);
+	if (c == '\0')
+		return (char *)s;
+	return (NULL);
+
 }
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)

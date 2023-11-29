@@ -6,7 +6,7 @@
 /*   By: skong <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 17:40:23 by skong             #+#    #+#             */
-/*   Updated: 2023/11/28 20:40:55 by skong            ###   ########.fr       */
+/*   Updated: 2023/11/29 10:27:31 by skong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -25,7 +25,7 @@ static char *read_to_static(int fd, char *remainder)
 		temp = ft_strjoin(remainder, buffer); 
 		free(remainder); 
 		remainder = temp;
-		if (ft_strhar(buffer, '\n'))
+		if (ft_strchr(buffer, '\n'))
 			break;
 	}
 	return (remainder);
@@ -51,7 +51,7 @@ static char *trim_remainder(char *remainder)
 	int	i; 
 
 	i = 0; 
-	while (remainder[i] && reaminder[i] != '\n')
+	while (remainder[i] && remainder[i] != '\n')
 		i++;
 	if (!remainder[i])
 	{
@@ -66,13 +66,12 @@ static char *trim_remainder(char *remainder)
 char	*get_next_line(int fd)
 {
 	static char	*remainder;
-	char		buffer[BUFFER_SIZE + 1];
-	int		bytes_read;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		retur(NULL);
+		return (NULL);
 	remainder = read_to_static(fd,remainder);
-	if(!remainder);
+	if(!remainder)
 		return (NULL);
 	line = get_line(remainder);
 	remainder = trim_remainder(remainder);
