@@ -11,57 +11,74 @@
 /* ************************************************************************** */
 #include "get_next_line.h"
 
-static char	*read_to_static(int fd, char *remainder)
+static char	*join_and_free(char *remainder, char *buffer)
 {
-	int		bytes_read;
-	char	*buffer;
 	char	*temp;
 
-	buffer = malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return (NULL);
-	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
+	temp = ft_strjoin(remainder, buffer);
+	free(remainder);
+	return (temp);
+}
+
+static char	*update_remainder(char *remainder, char *buffer)
+{
+	if (remainder)
 	{
-		buffer[bytes_read] = '\0';
-		if (remainder)
-		{
-			temp = ft_strjoin(remainder, buffer);
-			free(remainder);
-			remainder = temp;
-		}
-		else
-			remainder = ft_strdup(buffer);
-		if (ft_strchr(buffer, '\n'))
-			break;
+		return (join_and_free(remainder, buffer));
 	}
-	free(buffer);
+	else
+	{
+		return (ft_strdup(buffer));
+	}
+}
+
+static char	*check_read_error(int bytes_read, char *remainder)
+{
 	if (bytes_read < 0)
 	{
 		free(remainder);
 		return (NULL);
 	}
-	if (bytes_read == 0)
+	if (bytes_read == 0 && (!remainder || ft_strlen(remainder) == 0))
 	{
-		if (!remainder || ft_strlen(remainder) == 0)
-		{
-			free(remainder);
-			return (NULL);
-		}
+		free(remainder);
+		return (NULL);
 	}
 	return (remainder);
+}
+
+static char	*read_to_static(int fd, char *remainder)
+{
+	int		bytes_read;
+	char	*buffer;
+
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	while (bytes_read > 0)
+	{
+		buffer[bytes_read] = '\0';
+		remainder = update_remainder(remainder, buffer);
+		if (ft_strchr(buffer, '\n'))
+			break ;
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+	}
+	free(buffer);
+	return (check_read_error(bytes_read, remainder));
 }
 
 static char	*get_line(char *remainder)
 {
 	char	*line;
-	int	i;
+	int		i;
 
-	if(!remainder)
-		return (NULL); 
+	if (!remainder)
+		return (NULL);
 	i = 0;
 	while (remainder[i] && remainder[i] != '\n')
 		i++;
-	if(remainder[i] == '\n')
+	if (remainder[i] == '\n')
 		line = ft_substr(remainder, 0, i + 1);
 	else
 		line = ft_substr(remainder, 0, i);
@@ -71,9 +88,9 @@ static char	*get_line(char *remainder)
 static char	*trim_remainder(char *remainder)
 {
 	char	*new_remainder;
-	int	i; 
+	int		i;
 
-	i = 0; 
+	i = 0;
 	while (remainder[i] && remainder[i] != '\n')
 		i++;
 	if (!remainder[i])
@@ -81,7 +98,7 @@ static char	*trim_remainder(char *remainder)
 		free(remainder);
 		return (NULL);
 	}
-	new_remainder = ft_substr(remainder, i + 1, ft_strlen(remainder) - i );
+	new_remainder = ft_substr(remainder, i + 1, ft_strlen(remainder) - i);
 	free(remainder);
 	return (new_remainder);
 }
@@ -93,8 +110,8 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	remainder = read_to_static(fd,remainder);
-	if(!remainder)
+	remainder = read_to_static (fd, remainder);
+	if (!remainder)
 		return (NULL);
 	line = get_line(remainder);
 	remainder = trim_remainder(remainder);

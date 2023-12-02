@@ -55,17 +55,16 @@ char	*ft_strjoin(char const *s1, char const *s2)
 char	*ft_strchr(const char *s, int c)
 {
 	if (!s)
-		return NULL;
-	while(*s != '\0')
+		return (NULL);
+	while (*s != '\0')
 	{
 		if (*s == (char)c)
 			return ((char *)s);
 		s++;
 	}
 	if (c == '\0')
-		return (char *)s;
+		return ((char *)s);
 	return (NULL);
-
 }
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
