@@ -11,40 +11,20 @@
 /* ************************************************************************** */
 #include "get_next_line.h"
 
-static char	*join_and_free(char *remainder, char *buffer)
+static char	*update_remainder(char *remainder, char *buffer)
 {
 	char	*temp;
 
-	temp = ft_strjoin(remainder, buffer);
-	free(remainder);
-	return (temp);
-}
-
-static char	*update_remainder(char *remainder, char *buffer)
-{
 	if (remainder)
 	{
-		return (join_and_free(remainder, buffer));
+		temp = ft_strjoin(remainder, buffer);
+		free(remainder);
+		return (temp);
 	}
 	else
 	{
 		return (ft_strdup(buffer));
 	}
-}
-
-static char	*check_read_error(int bytes_read, char *remainder)
-{
-	if (bytes_read < 0)
-	{
-		free(remainder);
-		return (NULL);
-	}
-	if (bytes_read == 0 && (!remainder || ft_strlen(remainder) == 0))
-	{
-		free(remainder);
-		return (NULL);
-	}
-	return (remainder);
 }
 
 static char	*read_to_static(int fd, char *remainder)
@@ -65,7 +45,13 @@ static char	*read_to_static(int fd, char *remainder)
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 	}
 	free(buffer);
-	return (check_read_error(bytes_read, remainder));
+	if (bytes_read < 0 || (bytes_read == 0
+			&& (!remainder || ft_strlen(remainder) == 0)))
+	{
+		free (remainder);
+		return (NULL);
+	}
+	return (remainder);
 }
 
 static char	*get_line(char *remainder)
